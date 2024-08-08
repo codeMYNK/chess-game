@@ -3,7 +3,8 @@ const socket = require("socket.io");
 const http = require("http");
 const { Chess } = require("chess.js");
 const path = require("path");
-const { log } = require("console");
+const serverless = require("serverless-http");
+const router = express.Router();
 
 const app = express();
 
@@ -17,6 +18,10 @@ let currentPlayer = "W";
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/.netlify/functions/app", router);
+module.exports.handler = serverless(app);
+
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Chess Game" });
